@@ -77,6 +77,7 @@ public class Agent : MonoBehaviour {
 
     public void MoveForwards()
     {
+        //Debug.Log("MoveForwards() being called in agent script");
         m_rb.velocity = transform.forward * linearSpeed;
     }
 

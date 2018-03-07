@@ -13,13 +13,22 @@ public class AIAgentController : MonoBehaviour {
     public float m_maxAngularSpeedAngle = 45.0f;
     public float m_minAngularSpeedAngle = 10.0f;
 
-    public float m_maxSpeedDistance = 5.0f;
+    public float m_maxSpeedDistance = 1.0f;
     public float m_destinationBuffer = 2.0f;
     public float m_scanDistance = 10.0f;
 
+    // list of vector3 pathnodes
     private List<Vector3> m_pathList = new List<Vector3>();
 
     private bool m_isRunning = false;
+
+    // ball throwing variables
+    [SerializeField] private GameObject _currentBallTarget;
+    [SerializeField] private bool _isHoldingBall;
+    [SerializeField] private Transform _holdPosition;
+    [SerializeField] private GameObject _enemyTarget;
+    [SerializeField] private float m_enemyDestinationBuffer = 75.0f;
+    public float m_enemyScanDistance = 300.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -33,32 +42,49 @@ public class AIAgentController : MonoBehaviour {
             m_isRunning = !m_isRunning;
         }
 
-        if(m_isRunning)
+        if(m_isRunning && !_isHoldingBall)
         {
             ScanForObjects();
             MoveTowardsDestination();
         }
-        else
+        else if(!m_isRunning && !_isHoldingBall)
         {
             m_agent.StopAngularVelocity();
             m_agent.StopLinearVelocity();
+        }
+        else if(_isHoldingBall && m_isRunning)
+        {
+            // do holding ball behaviour
+            _currentBallTarget.transform.position = _holdPosition.position;
+            ScanForEnemy();
+            MoveTowardsEnemy();
+
         }
     }
 
     bool HasDestination()
     {
+        //Debug.Log("There are " + m_pathList.Count + " destinations in the list");
+        // if there are destinations in the path list
         if(m_pathList.Count > 0)
         {
+            // set destination to the next path node, calculate speed stuff and once destination is reached delete node from list
             Vector3 destination = m_pathList[0];
             Vector3 toDestination = destination - m_agent.transform.position;
             float distanceToDestination = toDestination.magnitude;
             if(distanceToDestination < m_destinationBuffer)
             {
+                if(Vector3.Distance(_currentBallTarget.transform.position, m_pathList[0]) < 1.0f)
+                {
+                    PickUpBall();
+                }
                 //m_pathList.Remove(destination);
                 m_pathList.RemoveAt(0);
+
             }
         }
 
+        // return true if there are still pathnodes in the list
         return m_pathList.Count > 0;
     }
 
@@ -83,15 +109,21 @@ public class AIAgentController : MonoBehaviour {
         return finalScore;
     }
 
+    // move agent towards destination
     void MoveTowardsDestination()
     {
+        //Debug.Log("MoveTowardsDestination() called");
+        // if there are no more path nodes, stop moving
         if(!HasDestination())
         {
+            Debug.Log("Stopping angular velocity");
             m_agent.StopAngularVelocity();
             return;
         }
 
+        // calculate all movement and speeds angles etc for moving towards destination
         Vector3 destination = m_pathList[0];
+        //Debug.Log("current destination: " + m_pathList[0]);
         Vector3 toDestination = destination - m_agent.transform.position;
         float distanceToDestination = toDestination.magnitude;
         toDestination.Normalize();
@@ -99,6 +131,7 @@ public class AIAgentController : MonoBehaviour {
         float rightToDestinationDot = Vector3.Dot(m_agent.transform.right, toDestination);
         float toDestinationAngle = Mathf.Rad2Deg * Mathf.Acos(lookAtToDestinationDot);
         
+        // generate list of speed considerations to pass to calculate functions
         List<float> speedConsiderations = new List<float>();
 
         float distanceConsideration = CalculateConsiderationValue(distanceToDestination,m_destinationBuffer, m_maxSpeedDistance);
@@ -107,9 +140,9 @@ public class AIAgentController : MonoBehaviour {
         speedConsiderations.Add(distanceConsideration);
         speedConsiderations.Add(speedAngleConsideration);
 
+        // set the agents speed and angular speed based on list of considerations generated earlier
         float speed = CalculateConsiderationUtil(speedConsiderations) * m_agent.m_linearMaxSpeed;
         m_agent.linearSpeed = speed;
-
         float angularSpeed = angleConsideration * m_agent.m_angularMaxSpeed;
         m_agent.angularSpeed = angularSpeed;
 
@@ -127,12 +160,15 @@ public class AIAgentController : MonoBehaviour {
 
         if (distanceToDestination > m_destinationBuffer)
         {
+            //Debug.Log("calling movetowards out of movetowards destination function");
             m_agent.MoveForwards();
         }
     }
 
+    // function draws out a path for the agent using navmesh
     void OnDestinationFound(Vector3 destination)
     {
+        //Debug.Log("OnDestinationFound() called");
         NavMeshPath path = new NavMeshPath();
         bool isSuccess = NavMesh.CalculatePath(m_agent.transform.position, destination, NavMesh.AllAreas, path);
         if(isSuccess)
@@ -147,25 +183,30 @@ public class AIAgentController : MonoBehaviour {
 
             foreach (Vector3 dest in m_pathList)
             {
-                Debug.Log("List Pos: " + dest);
+                //Debug.Log("List Pos: " + dest);
             }
         }
     }
 
     void ScanForObjects()
     {
+        // Debug.Log("agent scanning for objects");
+
         //don't scan when we have somewhere to go
         if(HasDestination())
         {
             return;
         }
 
+
+        // finding objects marked with the layer "Interactable"
         Vector3 agentPosition = m_agent.transform.position;
         int layer = LayerMask.NameToLayer("Interactable");
         int layerMask = 1 << layer;
         Collider[] hitColliders = Physics.OverlapSphere(agentPosition, m_scanDistance, layerMask);
-        foreach(Collider hitCollider in hitColliders)
-        {
+        foreach (Collider hitCollider in hitColliders)
+        { 
+            
             float distanceToObject = Vector3.Distance(agentPosition, hitCollider.transform.position);
             if(distanceToObject < m_destinationBuffer)
             {
@@ -173,10 +214,100 @@ public class AIAgentController : MonoBehaviour {
             }
 
             OnDestinationFound(hitCollider.transform.position);
+            if(hitCollider.gameObject.tag == "Ball")
+            {
+                _currentBallTarget = hitCollider.gameObject;
+            }
             
             break;
         }
     }
 
+    void PickUpBall()
+    {
+        _isHoldingBall = true;
+    }
+
+    void ThrowBall()
+    {
+        if(_enemyTarget)
+        _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>());
+        _isHoldingBall = false;
+    }
+
+    void ScanForEnemy()
+    {
+        int layer = LayerMask.NameToLayer("Agent");
+        int layerMask = 1 << layer;
+        Collider[] hitColliders = Physics.OverlapSphere(m_agent.transform.position, m_enemyScanDistance, layerMask);
+        foreach(Collider Target in hitColliders)
+        {
+            if(Target != gameObject.GetComponent<Collider>())
+            {
+                _enemyTarget = Target.gameObject;
+                _currentBallTarget.gameObject.GetComponent<BallProjectile>().m_movingTarget = _enemyTarget.gameObject.GetComponent<BasicVelocity>();
+            }
+            else
+            {
+                _enemyTarget = GameObject.FindGameObjectWithTag("Agent");
+                _currentBallTarget.gameObject.GetComponent<BallProjectile>().m_movingTarget = _enemyTarget.gameObject.GetComponent<BasicVelocity>();
+            }
+        }
+    
+    }
+
+    void MoveTowardsEnemy()
+    {
+        if (_isHoldingBall)
+        {
+
+            // calculate all movement and speeds angles etc for moving towards destination
+            Vector3 destination = _enemyTarget.transform.position;
+            //Debug.Log("current destination: " + m_pathList[0]);
+            Vector3 toDestination = destination - m_agent.transform.position;
+            float distanceToDestination = toDestination.magnitude;
+            toDestination.Normalize();
+            float lookAtToDestinationDot = Vector3.Dot(m_agent.transform.forward, toDestination);
+            float rightToDestinationDot = Vector3.Dot(m_agent.transform.right, toDestination);
+            float toDestinationAngle = Mathf.Rad2Deg * Mathf.Acos(lookAtToDestinationDot);
+
+            // generate list of speed considerations to pass to calculate functions
+            List<float> speedConsiderations = new List<float>();
+
+            float distanceConsideration = CalculateConsiderationValue(distanceToDestination, m_enemyDestinationBuffer, m_maxSpeedDistance);
+            float angleConsideration = CalculateConsiderationValue(toDestinationAngle, m_minAngularSpeedAngle, m_maxAngularSpeedAngle);
+            float speedAngleConsideration = 1.0f - angleConsideration;
+            speedConsiderations.Add(distanceConsideration);
+            speedConsiderations.Add(speedAngleConsideration);
+
+            // set the agents speed and angular speed based on list of considerations generated earlier
+            float speed = CalculateConsiderationUtil(speedConsiderations) * m_agent.m_linearMaxSpeed;
+            m_agent.linearSpeed = speed;
+            float angularSpeed = angleConsideration * m_agent.m_angularMaxSpeed;
+            m_agent.angularSpeed = angularSpeed;
+
+            //how do we face our destination
+            bool shouldTurnRight = rightToDestinationDot > Mathf.Epsilon;
+            if (shouldTurnRight)
+            {
+                m_agent.TurnRight();
+            }
+            else
+            {
+                m_agent.TurnLeft();
+            }
+
+
+            if (distanceToDestination > m_enemyDestinationBuffer)
+            {
+                //Debug.Log("calling movetowards out of movetowards destination function");
+                m_agent.MoveForwards();
+            }
+            else
+            {
+                ThrowBall();
+            }
+        }
+    }
 
 }

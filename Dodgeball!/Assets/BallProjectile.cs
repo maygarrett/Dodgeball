@@ -70,12 +70,14 @@ public class BallProjectile : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.Space))
+        /*
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             m_isRunning = !m_isRunning;
             //m_rb.velocity = CalculateInitialVelocity(m_targetTransform.position,false);
             m_rb.velocity = CalculateInitialVelocityMovingTarget();
         }
+        */
 
         //m_rb.useGravity = m_isRunning;
 
@@ -85,8 +87,22 @@ public class BallProjectile : MonoBehaviour {
         }
 	}
 
+    /*
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Time Elapsed: " + m_timeElapsed);
+    }
+    */
+
+    public void ThrowBall(BasicVelocity movingTarget)
+    {
+        m_isRunning = !m_isRunning;
+        SetBallTarget(movingTarget);
+        m_rb.velocity = CalculateInitialVelocityMovingTarget();
+    }
+
+    public void SetBallTarget(BasicVelocity movingTarget)
+    {
+        m_movingTarget = movingTarget;
     }
 }
