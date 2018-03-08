@@ -692,6 +692,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &775530756
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 775530757}
+  m_Layer: 8
+  m_Name: RayPositionRed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &775530757
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 775530756}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1836005283}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &807950462
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +1012,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 940707556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28.2, y: 0.53, z: -18.4}
+  m_LocalPosition: {x: 25.3, y: 0.53, z: 42.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1518489705}
@@ -1257,6 +1285,7 @@ MonoBehaviour:
   _enemyTarget: {fileID: 2050039424}
   m_enemyDestinationBuffer: 65
   m_enemyScanDistance: 150
+  _rayPosition: {fileID: 0}
   blueXMax: 0
   blueXMin: 0
   blueZMax: 0
@@ -1389,6 +1418,7 @@ MonoBehaviour:
   _enemyTarget: {fileID: 1836005276}
   m_enemyDestinationBuffer: 65
   m_enemyScanDistance: 150
+  _rayPosition: {fileID: 0}
   blueXMax: 0
   blueXMin: 0
   blueZMax: 0
@@ -1595,13 +1625,14 @@ MonoBehaviour:
   m_minAngularSpeedAngle: 25
   m_maxSpeedDistance: 1
   m_destinationBuffer: 2
-  m_scanDistance: 50
+  m_scanDistance: 35
   _currentBallTarget: {fileID: 0}
   _isHoldingBall: 0
   _holdPosition: {fileID: 2108551070}
   _enemyTarget: {fileID: 1836005276}
   m_enemyDestinationBuffer: 50
   m_enemyScanDistance: 150
+  _rayPosition: {fileID: 1639729972}
   blueXMax: 40
   blueXMin: -40
   blueZMax: 43
@@ -1627,21 +1658,22 @@ MonoBehaviour:
   m_minAngularSpeedAngle: 25
   m_maxSpeedDistance: 1
   m_destinationBuffer: 2
-  m_scanDistance: 50
+  m_scanDistance: 35
   _currentBallTarget: {fileID: 0}
   _isHoldingBall: 0
   _holdPosition: {fileID: 1244195690}
   _enemyTarget: {fileID: 2050039424}
   m_enemyDestinationBuffer: 50
   m_enemyScanDistance: 150
+  _rayPosition: {fileID: 775530756}
   blueXMax: 0
   blueXMin: 0
   blueZMax: 0
   blueZMin: 0
   redXMax: 40
   redXMin: -40
-  redZMax: -43
-  redZMin: -30
+  redZMax: -30
+  redZMin: -43
   _isBlue: 0
 --- !u!1 &1154299067
 GameObject:
@@ -1833,7 +1865,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1244504184}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.46, y: -4.03, z: 0}
+  m_LocalPosition: {x: 3.46, y: 1.8, z: 0}
   m_LocalScale: {x: 136.94, y: 10, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2320,6 +2352,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1639729972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1639729973}
+  m_Layer: 8
+  m_Name: RayPositionBlue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1639729973
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1639729972}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.71}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2050039428}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1645952228
 GameObject:
@@ -2911,12 +2971,13 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1836005276}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -32.3}
+  m_LocalPosition: {x: 0, y: 1, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1663189715}
   - {fileID: 1408507644}
   - {fileID: 1244195690}
+  - {fileID: 775530757}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3182,6 +3243,7 @@ Transform:
   - {fileID: 933907687}
   - {fileID: 1154299068}
   - {fileID: 2108551070}
+  - {fileID: 1639729973}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}

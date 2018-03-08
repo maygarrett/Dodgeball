@@ -29,6 +29,7 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private GameObject _enemyTarget;
     [SerializeField] private float m_enemyDestinationBuffer = 75.0f;
     public float m_enemyScanDistance = 300.0f;
+    [SerializeField] private GameObject _rayPosition;
 
     // wandering variables
     private Vector3 randomLocation;
@@ -41,6 +42,7 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private float redZMax;
     [SerializeField] private float redZMin;
     [SerializeField] private bool _isBlue;
+
 
     // Use this for initialization
     void Start () {
@@ -338,12 +340,29 @@ public class AIAgentController : MonoBehaviour {
 
             if (distanceToDestination > m_enemyDestinationBuffer)
             {
-                //Debug.Log("calling movetowards out of movetowards destination function");
                 m_agent.MoveForwards();
             }
             else
             {
-                ThrowBall();
+                // need to rotate the agent before throwing
+                RaycastHit hit;
+                if(Physics.Raycast(_rayPosition.transform.position, _enemyTarget.transform.position, out hit))
+                {
+                    if(hit.transform.gameObject == this.gameObject)
+                    {
+                        //how do we face our destination
+                        shouldTurnRight = rightToDestinationDot > Mathf.Epsilon;
+                        if (shouldTurnRight)
+                        {
+                            m_agent.TurnRight();
+                        }
+                        else
+                        {
+                            m_agent.TurnLeft();
+                        }
+                    }
+                    else ThrowBall();
+                }
             }
         }
     }
