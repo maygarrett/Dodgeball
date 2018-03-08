@@ -30,33 +30,49 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private float m_enemyDestinationBuffer = 75.0f;
     public float m_enemyScanDistance = 300.0f;
 
-	// Use this for initialization
-	void Start () {
+    // wandering variables
+    private Vector3 randomLocation;
+    [SerializeField] private float blueXMax;
+    [SerializeField] private float blueXMin;
+    [SerializeField] private float blueZMax;
+    [SerializeField] private float blueZMin;
+    [SerializeField] private float redXMax;
+    [SerializeField] private float redXMin;
+    [SerializeField] private float redZMax;
+    [SerializeField] private float redZMin;
+    [SerializeField] private bool _isBlue;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        // activate
         if(Input.GetKeyDown(KeyCode.Space))
         {
             m_isRunning = !m_isRunning;
         }
 
+        //scanning and moving
         if(m_isRunning && !_isHoldingBall)
         {
             ScanForObjects();
             MoveTowardsDestination();
         }
+        // stopping everything
         else if(!m_isRunning && !_isHoldingBall)
         {
             m_agent.StopAngularVelocity();
             m_agent.StopLinearVelocity();
         }
+        // holding a ball (attack state)
         else if(_isHoldingBall && m_isRunning)
         {
             // do holding ball behaviour
             _currentBallTarget.transform.position = _holdPosition.position;
-            ScanForEnemy();
+            //ScanForEnemy();
             MoveTowardsEnemy();
 
         }
@@ -64,23 +80,17 @@ public class AIAgentController : MonoBehaviour {
 
     bool HasDestination()
     {
-        //Debug.Log("There are " + m_pathList.Count + " destinations in the list");
         // if there are destinations in the path list
         if(m_pathList.Count > 0)
         {
             // set destination to the next path node, calculate speed stuff and once destination is reached delete node from list
             Vector3 destination = m_pathList[0];
+
             Vector3 toDestination = destination - m_agent.transform.position;
             float distanceToDestination = toDestination.magnitude;
             if(distanceToDestination < m_destinationBuffer)
             {
-                if(Vector3.Distance(_currentBallTarget.transform.position, m_pathList[0]) < 1.0f)
-                {
-                    PickUpBall();
-                }
-                //m_pathList.Remove(destination);
                 m_pathList.RemoveAt(0);
-
             }
         }
 
@@ -112,17 +122,19 @@ public class AIAgentController : MonoBehaviour {
     // move agent towards destination
     void MoveTowardsDestination()
     {
-        //Debug.Log("MoveTowardsDestination() called");
         // if there are no more path nodes, stop moving
         if(!HasDestination())
         {
-            Debug.Log("Stopping angular velocity");
             m_agent.StopAngularVelocity();
             return;
         }
 
         // calculate all movement and speeds angles etc for moving towards destination
         Vector3 destination = m_pathList[0];
+        if(_currentBallTarget)
+        {
+            destination = _currentBallTarget.transform.position;
+        }
         //Debug.Log("current destination: " + m_pathList[0]);
         Vector3 toDestination = destination - m_agent.transform.position;
         float distanceToDestination = toDestination.magnitude;
@@ -160,8 +172,11 @@ public class AIAgentController : MonoBehaviour {
 
         if (distanceToDestination > m_destinationBuffer)
         {
-            //Debug.Log("calling movetowards out of movetowards destination function");
             m_agent.MoveForwards();
+        }
+        else if (_currentBallTarget)
+        {
+            PickUpBall();
         }
     }
 
@@ -178,7 +193,7 @@ public class AIAgentController : MonoBehaviour {
             foreach(Vector3 pathNode in path.corners)
             {
                 m_pathList.Add(pathNode);
-                Debug.Log("Path Pos: " + pathNode);
+                // Debug.Log("Path Pos: " + pathNode);
             }
 
             foreach (Vector3 dest in m_pathList)
@@ -204,22 +219,38 @@ public class AIAgentController : MonoBehaviour {
         int layer = LayerMask.NameToLayer("Interactable");
         int layerMask = 1 << layer;
         Collider[] hitColliders = Physics.OverlapSphere(agentPosition, m_scanDistance, layerMask);
-        foreach (Collider hitCollider in hitColliders)
-        { 
+        if (hitColliders.Length == 0)
+        {
+            // add a random location to OnDestinationFound
             
-            float distanceToObject = Vector3.Distance(agentPosition, hitCollider.transform.position);
-            if(distanceToObject < m_destinationBuffer)
+            Vector3 randomLocation = GenerateRandomLocation(_isBlue);
+            OnDestinationFound(randomLocation);
+        }
+        else
+        {
+            if(m_pathList.Count > 0)
             {
-                continue;
+                m_pathList.Clear();
             }
 
-            OnDestinationFound(hitCollider.transform.position);
-            if(hitCollider.gameObject.tag == "Ball")
+            foreach (Collider hitCollider in hitColliders)
             {
-                _currentBallTarget = hitCollider.gameObject;
+
+                float distanceToObject = Vector3.Distance(agentPosition, hitCollider.transform.position);
+                if (distanceToObject < m_destinationBuffer)
+                {
+                    continue;
+                }
+
+                if (hitCollider.gameObject.tag == "Ball")
+                {
+                    _currentBallTarget = hitCollider.gameObject;
+                }
+
+                OnDestinationFound(hitCollider.transform.position);
+
+                break;
             }
-            
-            break;
         }
     }
 
@@ -230,11 +261,17 @@ public class AIAgentController : MonoBehaviour {
 
     void ThrowBall()
     {
-        if(_enemyTarget)
-        _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>());
-        _isHoldingBall = false;
+        if (_enemyTarget && _isHoldingBall)
+        {
+            _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>());
+            _isHoldingBall = false;
+            _currentBallTarget = null;
+            m_pathList.Clear();
+            ScanForObjects();
+        }
     }
 
+    /*
     void ScanForEnemy()
     {
         int layer = LayerMask.NameToLayer("Agent");
@@ -249,12 +286,13 @@ public class AIAgentController : MonoBehaviour {
             }
             else
             {
-                _enemyTarget = GameObject.FindGameObjectWithTag("Agent");
+                /_enemyTarget = GameObject.FindGameObjectWithTag("Agent");
                 _currentBallTarget.gameObject.GetComponent<BallProjectile>().m_movingTarget = _enemyTarget.gameObject.GetComponent<BasicVelocity>();
             }
         }
     
-    }
+    }*/
+
 
     void MoveTowardsEnemy()
     {
@@ -310,4 +348,27 @@ public class AIAgentController : MonoBehaviour {
         }
     }
 
+    Vector3 GenerateRandomLocation(bool isBlue)
+    {
+        float xValue;
+        float yValue;
+        float zValue;
+
+        if (isBlue)
+        {
+            xValue = Random.Range(blueXMin, blueXMax);
+            yValue = gameObject.transform.position.y;
+            zValue = Random.Range(blueZMin, blueZMax);
+        }
+        else
+        {
+            xValue = Random.Range(redXMin, redXMax);
+            yValue = gameObject.transform.position.y;
+            zValue = Random.Range(redZMin, redZMax);
+        }
+
+        return new Vector3(xValue, yValue, zValue);
+    }
+
 }
+
