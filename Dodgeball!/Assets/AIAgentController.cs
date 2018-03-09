@@ -26,6 +26,7 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private GameObject _currentBallTarget;
     [SerializeField] private bool _isHoldingBall;
     [SerializeField] private Transform _holdPosition;
+    [SerializeField] private Transform _secondaryThrowPosition;
     [SerializeField] private GameObject _enemyTarget;
     [SerializeField] private float m_enemyDestinationBuffer = 75.0f;
     public float m_enemyScanDistance = 300.0f;
@@ -42,6 +43,12 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private float redZMax;
     [SerializeField] private float redZMin;
     [SerializeField] private bool _isBlue;
+
+    // Agent Tracking variables
+    [SerializeField] private float _agentDistanceBuffer;
+    [SerializeField] private float _agentXBuffer;
+    private bool _isNewTracking = false;
+    private float _closerEnemyDestinationBuffer = 5.0f;
 
 
     // Use this for initialization
@@ -73,7 +80,7 @@ public class AIAgentController : MonoBehaviour {
         else if(_isHoldingBall && m_isRunning)
         {
             // do holding ball behaviour
-            _currentBallTarget.transform.position = _holdPosition.position;
+            HoldingBallBehaviour();
             //ScanForEnemy();
             MoveTowardsEnemy();
 
@@ -92,6 +99,14 @@ public class AIAgentController : MonoBehaviour {
             float distanceToDestination = toDestination.magnitude;
             if(distanceToDestination < m_destinationBuffer)
             {
+                if (_currentBallTarget)
+                {
+                    if (Vector3.Distance(_currentBallTarget.transform.position, destination) < m_destinationBuffer)
+                    {
+                        PickUpBall();
+                    }
+                }
+
                 m_pathList.RemoveAt(0);
             }
         }
@@ -146,7 +161,7 @@ public class AIAgentController : MonoBehaviour {
                 _currentBallTarget = null;
                 m_pathList.Clear();
                 destination = GenerateRandomLocation(_isBlue);
-                m_pathList[0] = destination;
+                m_pathList.Add(destination);
             }
         }
         else
@@ -156,7 +171,7 @@ public class AIAgentController : MonoBehaviour {
                 _currentBallTarget = null;
                 m_pathList.Clear();
                 destination = GenerateRandomLocation(_isBlue);
-                m_pathList[0] = destination;
+                m_pathList.Add(destination);
             }
         }
 
@@ -280,6 +295,7 @@ public class AIAgentController : MonoBehaviour {
 
     void PickUpBall()
     {
+        Debug.Log("Picking up ball");
         _isHoldingBall = true;
     }
 
@@ -287,10 +303,11 @@ public class AIAgentController : MonoBehaviour {
     {
         if (_enemyTarget && _isHoldingBall)
         {
+            Debug.Log("Throwing Ball");
             _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>());
             _isHoldingBall = false;
             _currentBallTarget = null;
-            m_pathList.Clear();
+            //m_pathList.Clear();
             //StartCoroutine(Wait(2));
             //ScanForObjects();
         }
@@ -324,9 +341,27 @@ public class AIAgentController : MonoBehaviour {
         if (_isHoldingBall)
         {
 
-            // calculate all movement and speeds angles etc for moving towards destination
             Vector3 destination = _enemyTarget.transform.position;
-            //Debug.Log("current destination: " + m_pathList[0]);
+
+            // account for issues with crossing line while seeking enemy
+            if (Mathf.Abs(_enemyTarget.transform.position.x - gameObject.transform.position.x) > _agentXBuffer)
+            {
+                _isNewTracking = true;
+
+                if (_isBlue)
+                {
+                    destination = new Vector3(_enemyTarget.transform.position.x, _enemyTarget.transform.position.y, 10.0f);
+                }
+                else
+                {
+                    destination = new Vector3(_enemyTarget.transform.position.x, _enemyTarget.transform.position.y, -10.0f);
+                }
+            }
+            else
+            {
+                _isNewTracking = false;
+            }
+            
             Vector3 toDestination = destination - m_agent.transform.position;
             float distanceToDestination = toDestination.magnitude;
             toDestination.Normalize();
@@ -360,32 +395,20 @@ public class AIAgentController : MonoBehaviour {
                 m_agent.TurnLeft();
             }
 
+            float buffer = m_enemyDestinationBuffer;
 
-            if (distanceToDestination > m_enemyDestinationBuffer)
+            if(_isNewTracking)
+            {
+                buffer = _closerEnemyDestinationBuffer;
+            }
+
+            if (distanceToDestination > buffer)
             {
                 m_agent.MoveForwards();
             }
             else
             {
-                // need to rotate the agent before throwing
-                RaycastHit hit;
-                if(Physics.Raycast(_rayPosition.transform.position, _enemyTarget.transform.position, out hit))
-                {
-                    if(hit.transform.gameObject == this.gameObject)
-                    {
-                        //how do we face our destination
-                        shouldTurnRight = rightToDestinationDot > Mathf.Epsilon;
-                        if (shouldTurnRight)
-                        {
-                            m_agent.TurnRight();
-                        }
-                        else
-                        {
-                            m_agent.TurnLeft();
-                        }
-                    }
-                    else ThrowBall();
-                }
+                ThrowBall();
             }
         }
     }
@@ -415,6 +438,21 @@ public class AIAgentController : MonoBehaviour {
     private IEnumerator Wait(float time)
     {
         yield return new WaitForSeconds(time);
+    }
+
+    private void HoldingBallBehaviour()
+    {
+        // if holdposition is closer
+        if(Vector3.Distance(_holdPosition.position, _enemyTarget.transform.position) < Vector3.Distance(_secondaryThrowPosition.position, _enemyTarget.transform.position))
+        {
+            // hold ball in hold position
+            _currentBallTarget.transform.position = _holdPosition.position;
+        }
+        else
+        {
+            // hold ball in secondary position
+            _currentBallTarget.transform.position = _secondaryThrowPosition.position;
+        }
     }
 
 }
