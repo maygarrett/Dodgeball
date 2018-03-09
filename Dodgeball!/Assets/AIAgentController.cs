@@ -137,7 +137,29 @@ public class AIAgentController : MonoBehaviour {
         {
             destination = _currentBallTarget.transform.position;
         }
-        //Debug.Log("current destination: " + m_pathList[0]);
+
+        // check if destination is on correct side of court
+        if (_isBlue)
+        {
+            if (destination.z < 0)
+            {
+                _currentBallTarget = null;
+                m_pathList.Clear();
+                destination = GenerateRandomLocation(_isBlue);
+                m_pathList[0] = destination;
+            }
+        }
+        else
+        {
+            if (destination.z > 0)
+            {
+                _currentBallTarget = null;
+                m_pathList.Clear();
+                destination = GenerateRandomLocation(_isBlue);
+                m_pathList[0] = destination;
+            }
+        }
+
         Vector3 toDestination = destination - m_agent.transform.position;
         float distanceToDestination = toDestination.magnitude;
         toDestination.Normalize();
@@ -269,7 +291,8 @@ public class AIAgentController : MonoBehaviour {
             _isHoldingBall = false;
             _currentBallTarget = null;
             m_pathList.Clear();
-            ScanForObjects();
+            //StartCoroutine(Wait(2));
+            //ScanForObjects();
         }
     }
 
@@ -387,6 +410,11 @@ public class AIAgentController : MonoBehaviour {
         }
 
         return new Vector3(xValue, yValue, zValue);
+    }
+
+    private IEnumerator Wait(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
 
 }
