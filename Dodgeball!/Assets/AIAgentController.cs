@@ -27,7 +27,8 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private bool _isHoldingBall;
     [SerializeField] private Transform _holdPosition;
     [SerializeField] private Transform _secondaryThrowPosition;
-    [SerializeField] private GameObject _enemyTarget;
+    [SerializeField] private GameObject[] _enemies;
+    private GameObject _enemyTarget;
     [SerializeField] private float m_enemyDestinationBuffer = 75.0f;
     public float m_enemyScanDistance = 300.0f;
     [SerializeField] private GameObject _rayPosition;
@@ -442,6 +443,8 @@ public class AIAgentController : MonoBehaviour {
 
     private void HoldingBallBehaviour()
     {
+        EnemyDecider();
+
         // if holdposition is closer
         if(Vector3.Distance(_holdPosition.position, _enemyTarget.transform.position) < Vector3.Distance(_secondaryThrowPosition.position, _enemyTarget.transform.position))
         {
@@ -462,6 +465,22 @@ public class AIAgentController : MonoBehaviour {
             if(_isHoldingBall)
             {
                 ThrowBall();
+            }
+        }
+    }
+
+    private void EnemyDecider()
+    {
+        foreach(GameObject enemy in _enemies)
+        {
+            if(_enemyTarget == null)
+            {
+                _enemyTarget = enemy;
+            }
+
+            if(Vector3.Distance(gameObject.transform.position, _enemyTarget.transform.position) > Vector3.Distance(gameObject.transform.position, enemy.transform.position))
+            {
+                _enemyTarget = enemy;
             }
         }
     }
