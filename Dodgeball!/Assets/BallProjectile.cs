@@ -18,6 +18,9 @@ public class BallProjectile : MonoBehaviour {
 
     private bool _isHeld = false;
 
+    // useable accuracy value --- farther from 0 the less accurate
+    private float _accuracyValue = 0;
+
 	// Use this for initialization
 	void Start () {
         m_rb = GetComponent<Rigidbody>();
@@ -28,7 +31,7 @@ public class BallProjectile : MonoBehaviour {
         //find out where the target will be in our desired time
         //aim for that position
         Vector3 targetVelocity = m_movingTarget.GetVelocity();
-        Vector3 targetDisplacement = targetVelocity * m_desiredAirTime;
+        Vector3 targetDisplacement = targetVelocity * m_desiredAirTime * _accuracyValue;
         Vector3 targetPosition = m_movingTarget.transform.position + targetDisplacement;
         return CalculateInitialVelocity(targetPosition,true);
     }
@@ -96,10 +99,11 @@ public class BallProjectile : MonoBehaviour {
     }
     */
 
-    public void ThrowBall(BasicVelocity movingTarget)
+    public void ThrowBall(BasicVelocity movingTarget, float accuracy)
     {
         m_isRunning = !m_isRunning;
         SetBallTarget(movingTarget);
+        _accuracyValue = accuracy;
         m_rb.velocity = CalculateInitialVelocityMovingTarget();
     }
 

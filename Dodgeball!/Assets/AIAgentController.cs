@@ -330,7 +330,8 @@ public class AIAgentController : MonoBehaviour {
         {
             Debug.Log("Throwing Ball");
             _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(false);
-            _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>());
+            float accuracy = Random.Range(0.85f, 1.15f);
+            _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
             _isHoldingBall = false;
             _currentBallTarget = null;
             //m_pathList.Clear();
