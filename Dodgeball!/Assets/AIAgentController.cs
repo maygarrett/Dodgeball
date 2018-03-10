@@ -343,7 +343,7 @@ public class AIAgentController : MonoBehaviour {
 
             Vector3 destination = _enemyTarget.transform.position;
 
-            // account for issues with crossing line while seeking enemy
+            /*// account for issues with crossing line while seeking enemy
             if (Mathf.Abs(_enemyTarget.transform.position.x - gameObject.transform.position.x) > _agentXBuffer)
             {
                 _isNewTracking = true;
@@ -360,7 +360,7 @@ public class AIAgentController : MonoBehaviour {
             else
             {
                 _isNewTracking = false;
-            }
+            }*/
             
             Vector3 toDestination = destination - m_agent.transform.position;
             float distanceToDestination = toDestination.magnitude;
@@ -397,10 +397,10 @@ public class AIAgentController : MonoBehaviour {
 
             float buffer = m_enemyDestinationBuffer;
 
-            if(_isNewTracking)
+            /*if(_isNewTracking)
             {
                 buffer = _closerEnemyDestinationBuffer;
-            }
+            }*/
 
             if (distanceToDestination > buffer)
             {
@@ -452,6 +452,17 @@ public class AIAgentController : MonoBehaviour {
         {
             // hold ball in secondary position
             _currentBallTarget.transform.position = _secondaryThrowPosition.position;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "ThrowCollider")
+        {
+            if(_isHoldingBall)
+            {
+                ThrowBall();
+            }
         }
     }
 
