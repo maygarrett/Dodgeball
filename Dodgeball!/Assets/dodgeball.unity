@@ -1804,7 +1804,7 @@ BoxCollider:
   m_GameObject: {fileID: 1244504184}
   m_Material: {fileID: 13400000, guid: a54d2d55c10fab44c9c6d5dcb1c575ab, type: 2}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.83, y: 1.8055639, z: 6}
   m_Center: {x: 0, y: 0.40278178, z: 0}
