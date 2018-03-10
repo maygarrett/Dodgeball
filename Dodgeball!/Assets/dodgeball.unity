@@ -1491,6 +1491,7 @@ MonoBehaviour:
   _isBlue: 0
   _agentDistanceBuffer: 0
   _agentXBuffer: 0
+  _teammates: []
 --- !u!114 &1076086499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1627,6 +1628,7 @@ MonoBehaviour:
   _isBlue: 0
   _agentDistanceBuffer: 0
   _agentXBuffer: 0
+  _teammates: []
 --- !u!114 &1088915927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1848,6 +1850,8 @@ MonoBehaviour:
   _isBlue: 1
   _agentDistanceBuffer: 70
   _agentXBuffer: 20
+  _teammates:
+  - {fileID: 1780769218}
 --- !u!114 &1117754860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1886,6 +1890,8 @@ MonoBehaviour:
   _isBlue: 0
   _agentDistanceBuffer: 70
   _agentXBuffer: 20
+  _teammates:
+  - {fileID: 1337271346}
 --- !u!114 &1117754861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1924,6 +1930,8 @@ MonoBehaviour:
   _isBlue: 1
   _agentDistanceBuffer: 70
   _agentXBuffer: 20
+  _teammates:
+  - {fileID: 2050039424}
 --- !u!114 &1117754862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1962,6 +1970,8 @@ MonoBehaviour:
   _isBlue: 0
   _agentDistanceBuffer: 70
   _agentXBuffer: 20
+  _teammates:
+  - {fileID: 1836005276}
 --- !u!1 &1154299067
 GameObject:
   m_ObjectHideFlags: 0

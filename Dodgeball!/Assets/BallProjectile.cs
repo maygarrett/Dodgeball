@@ -16,6 +16,8 @@ public class BallProjectile : MonoBehaviour {
     public BasicVelocity m_movingTarget = null;
     public float m_desiredAirTime = 1.0f;
 
+    private bool _isHeld = false;
+
 	// Use this for initialization
 	void Start () {
         m_rb = GetComponent<Rigidbody>();
@@ -104,5 +106,15 @@ public class BallProjectile : MonoBehaviour {
     public void SetBallTarget(BasicVelocity movingTarget)
     {
         m_movingTarget = movingTarget;
+    }
+
+    public void SetIsHeld(bool isHeld)
+    {
+        _isHeld = isHeld;
+    }
+
+    public bool GetIsHeld()
+    {
+        return _isHeld;
     }
 }

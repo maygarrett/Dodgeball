@@ -51,6 +51,9 @@ public class AIAgentController : MonoBehaviour {
     private bool _isNewTracking = false;
     private float _closerEnemyDestinationBuffer = 5.0f;
 
+    // teammates
+    [SerializeField] private GameObject[] _teammates;
+
 
     // Use this for initialization
     void Start () {
@@ -151,6 +154,12 @@ public class AIAgentController : MonoBehaviour {
         Vector3 destination = m_pathList[0];
         if(_currentBallTarget)
         {
+            if(_currentBallTarget.GetComponent<BallProjectile>().GetIsHeld())
+            {
+                ResetDestinations();
+                return;
+            }
+
             destination = _currentBallTarget.transform.position;
         }
 
@@ -284,20 +293,35 @@ public class AIAgentController : MonoBehaviour {
 
                 if (hitCollider.gameObject.tag == "Ball")
                 {
-                    _currentBallTarget = hitCollider.gameObject;
+                    if (!hitCollider.gameObject.GetComponent<BallProjectile>().GetIsHeld())
+                    {
+                        _currentBallTarget = hitCollider.gameObject;
+
+                    }
+                    if (_currentBallTarget)
+                    {
+                        OnDestinationFound(hitCollider.transform.position);
+                    }
+                    else
+                    {
+                        Vector3 randomLocation = GenerateRandomLocation(_isBlue);
+                        OnDestinationFound(randomLocation);
+                    }
+
+                    break;
                 }
-
-                OnDestinationFound(hitCollider.transform.position);
-
-                break;
             }
         }
     }
 
     void PickUpBall()
     {
-        Debug.Log("Picking up ball");
-        _isHoldingBall = true;
+        if (!_currentBallTarget.GetComponent<BallProjectile>().GetIsHeld())
+        {
+            _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(true);
+            Debug.Log("Picking up ball");
+            _isHoldingBall = true;
+        }
     }
 
     void ThrowBall()
@@ -305,6 +329,7 @@ public class AIAgentController : MonoBehaviour {
         if (_enemyTarget && _isHoldingBall)
         {
             Debug.Log("Throwing Ball");
+            _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(false);
             _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>());
             _isHoldingBall = false;
             _currentBallTarget = null;
@@ -483,6 +508,12 @@ public class AIAgentController : MonoBehaviour {
                 _enemyTarget = enemy;
             }
         }
+    }
+
+    private void ResetDestinations()
+    {
+        m_pathList.Clear();
+        _currentBallTarget = null;
     }
 
 }
