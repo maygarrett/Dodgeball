@@ -330,7 +330,7 @@ public class AIAgentController : MonoBehaviour {
         {
             Debug.Log("Throwing Ball");
             _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(false);
-            float accuracy = Random.Range(0.85f, 1.15f);
+            float accuracy = Random.Range(0.9f, 1.1f);
             _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
             _isHoldingBall = false;
             _currentBallTarget = null;
@@ -492,6 +492,14 @@ public class AIAgentController : MonoBehaviour {
             {
                 ThrowBall();
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ball" && collision.gameObject.GetComponent<BallProjectile>()._isThrown)
+        {
+            Debug.Log(gameObject.name + " got Hit");
         }
     }
 

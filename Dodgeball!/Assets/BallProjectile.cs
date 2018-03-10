@@ -17,6 +17,7 @@ public class BallProjectile : MonoBehaviour {
     public float m_desiredAirTime = 1.0f;
 
     private bool _isHeld = false;
+    public bool _isThrown = false;
 
     // useable accuracy value --- farther from 0 the less accurate
     private float _accuracyValue = 0;
@@ -101,10 +102,12 @@ public class BallProjectile : MonoBehaviour {
 
     public void ThrowBall(BasicVelocity movingTarget, float accuracy)
     {
+
         m_isRunning = !m_isRunning;
         SetBallTarget(movingTarget);
         _accuracyValue = accuracy;
         m_rb.velocity = CalculateInitialVelocityMovingTarget();
+        _isThrown = true;
     }
 
     public void SetBallTarget(BasicVelocity movingTarget)
@@ -120,5 +123,13 @@ public class BallProjectile : MonoBehaviour {
     public bool GetIsHeld()
     {
         return _isHeld;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            _isThrown = false;
+        }
     }
 }

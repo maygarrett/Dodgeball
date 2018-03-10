@@ -8,6 +8,7 @@ TagManager:
   - InteractableObject
   - Ball
   - ThrowCollider
+  - Ground
   layers:
   - Default
   - TransparentFX
