@@ -84,7 +84,11 @@ public class AIAgentController : MonoBehaviour {
         else if(_isHoldingBall && m_isRunning)
         {
             // do holding ball behaviour
-            HoldingBallBehaviour();
+            if (_currentBallTarget)
+            {
+                HoldingBallBehaviour();
+            }
+            else _isHoldingBall = false;
             //ScanForEnemy();
             MoveTowardsEnemy();
 
