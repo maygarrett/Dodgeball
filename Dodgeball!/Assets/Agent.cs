@@ -18,6 +18,9 @@ public class Agent : MonoBehaviour {
     public float m_linearAcceleration = 0.0f;
     public float m_angularAcceleration = 0.0f;
 
+    [SerializeField] private GameObject _plane;
+    public AIAgentController _agentController;
+
     public float linearSpeed
     {
         get;
@@ -39,6 +42,8 @@ public class Agent : MonoBehaviour {
         DetermineAgentColour();
         linearSpeed = 0.0f;
         angularSpeed = 0.0f;
+
+        _agentController = FindAgentController();
     }
 	
 	// Update is called once per frame
@@ -69,7 +74,7 @@ public class Agent : MonoBehaviour {
         }
     }
 
-    protected void SetMaterial(Material mat)
+    public void SetMaterial(Material mat)
     {
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material = mat;
@@ -118,4 +123,36 @@ public class Agent : MonoBehaviour {
     {
         m_rb.angularVelocity = Vector3.zero;
     }
+
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "ThrowCollider")
+        {
+            _agentController.ThrowBall();
+        }
+    }
+
+    private AIAgentController FindAgentController()
+    {
+        AIAgentController[] controllers = _plane.GetComponents<AIAgentController>();
+        AIAgentController thisAgentController = null;
+
+
+        if (controllers.Length > 0)
+        {
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                if (controllers[i].m_agent == this)
+                {
+                    thisAgentController = controllers[i];
+                }
+            }
+        }
+
+        return thisAgentController;
+    }
+
 }

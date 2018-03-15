@@ -24,7 +24,7 @@ public class AIAgentController : MonoBehaviour {
 
     // ball throwing variables
     [SerializeField] private GameObject _currentBallTarget;
-    [SerializeField] private bool _isHoldingBall;
+    [SerializeField] public bool _isHoldingBall;
     [SerializeField] private Transform _holdPosition;
     [SerializeField] private Transform _secondaryThrowPosition;
     [SerializeField] private GameObject[] _enemies;
@@ -324,19 +324,20 @@ public class AIAgentController : MonoBehaviour {
         }
     }
 
-    void ThrowBall()
+    public void ThrowBall()
     {
         if (_enemyTarget && _isHoldingBall)
         {
-            Debug.Log("Throwing Ball");
-            _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(false);
+            // get referemce to ball script
+            BallProjectile currentBall = _currentBallTarget.GetComponent<BallProjectile>();
+
+            currentBall.SetIsHeld(false);
+            // determining accuracy
             float accuracy = Random.Range(0.9f, 1.1f);
-            _currentBallTarget.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
+            currentBall.ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
+            currentBall._lastThrower = this;
             _isHoldingBall = false;
             _currentBallTarget = null;
-            //m_pathList.Clear();
-            //StartCoroutine(Wait(2));
-            //ScanForObjects();
         }
     }
 
@@ -495,14 +496,6 @@ public class AIAgentController : MonoBehaviour {
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Ball" && collision.gameObject.GetComponent<BallProjectile>()._isThrown)
-        {
-            Debug.Log(gameObject.name + " got Hit");
-        }
-    }
-
     private void EnemyDecider()
     {
         foreach(GameObject enemy in _enemies)
@@ -523,6 +516,40 @@ public class AIAgentController : MonoBehaviour {
     {
         m_pathList.Clear();
         _currentBallTarget = null;
+    }
+
+    public void GotHit(AIAgentController attacker)
+    {
+        // check to see if they catch the ball
+        bool tempCatch = isACatch();
+        // if they catch
+        if (tempCatch)
+        {
+            attacker.Eliminate(attacker.gameObject);
+        }
+        // if not
+        else
+        {
+            Eliminate(this.gameObject);
+        }
+    }
+
+    public void Eliminate(GameObject playerEliminated)
+    {
+        // eliminate player from the game
+        Debug.Log(playerEliminated + " is eliminated");
+        //this.enabled = false;
+    }
+
+    private bool isACatch()
+    {
+        float number = Random.Range(0, 10);
+
+        if (number < 8)
+        {
+            return false;
+        }
+        else return true;
     }
 
 }

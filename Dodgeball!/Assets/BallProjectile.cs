@@ -22,6 +22,9 @@ public class BallProjectile : MonoBehaviour {
     // useable accuracy value --- farther from 0 the less accurate
     private float _accuracyValue = 0;
 
+    // storing last player to throw ball
+    public AIAgentController _lastThrower;
+
 	// Use this for initialization
 	void Start () {
         m_rb = GetComponent<Rigidbody>();
@@ -130,6 +133,17 @@ public class BallProjectile : MonoBehaviour {
         if(collision.gameObject.tag == "Ground")
         {
             _isThrown = false;
+            _lastThrower = null;
+        }
+
+        if (collision.gameObject.tag == "Agent")
+        {
+            if (_isThrown)
+            {
+                Debug.Log(collision.gameObject.name + " got Hit");
+                collision.gameObject.GetComponent<Agent>()._agentController.GotHit(_lastThrower);
+                _lastThrower = null;
+            }
         }
     }
 }
