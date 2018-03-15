@@ -525,19 +525,19 @@ public class AIAgentController : MonoBehaviour {
         // if they catch
         if (tempCatch)
         {
-            attacker.Eliminate(attacker.gameObject);
+            attacker.Eliminate(attacker);
         }
         // if not
         else
         {
-            Eliminate(this.gameObject);
+            Eliminate(this);
         }
     }
 
-    public void Eliminate(GameObject playerEliminated)
+    public void Eliminate(AIAgentController playerEliminated)
     {
         // eliminate player from the game
-        Debug.Log(playerEliminated + " is eliminated");
+        Debug.Log(playerEliminated.m_agent.gameObject + " is eliminated");
         //this.enabled = false;
     }
 
