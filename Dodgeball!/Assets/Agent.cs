@@ -42,7 +42,7 @@ public class Agent : MonoBehaviour {
     void Start () {
         m_rb = GetComponent<Rigidbody>();
         DetermineAgentColour();
-        linearSpeed = 3.0f;
+        linearSpeed = 6.0f;
         angularSpeed = 3.0f;
 
         _agentController = FindAgentController();

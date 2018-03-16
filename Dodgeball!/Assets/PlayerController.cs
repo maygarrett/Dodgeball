@@ -17,6 +17,12 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private GameObject[] _enemies;
     private GameObject _enemyTarget;
 
+    // throw charging and accuracy determining variables
+    private bool _isCharging = false;
+    private float _accuracyValue = 1;
+    private float _chargeStartTime;
+    private float _chargeEndTime;
+
 
 	// Use this for initialization
 	void Start () {
@@ -35,80 +41,114 @@ public class PlayerController : MonoBehaviour {
         bool isLinearIdle = true;
         bool isAngularIdle = true;
 
-        // movement inputs
-        if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            isLinearIdle = false;
-            m_agent.StrafeRight();
-        }
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            isLinearIdle = false;
-            m_agent.StrafeLeft();
-        }
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-        {
-            isLinearIdle = false;
-            m_agent.MoveForwards();
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            isLinearIdle = false;
-            m_agent.MoveBackwards();
-        }
-        if (Input.GetKey(KeyCode.Q))
-        {
-            isAngularIdle = false;
-            m_agent.TurnLeft();
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            isAngularIdle = false;
-            m_agent.TurnRight();
-        }
-        if(isLinearIdle)
-        {
-            m_agent.StopLinearVelocity();
-        }
-        if(isAngularIdle)
-        {
-            m_agent.StopAngularVelocity();
-        }
 
-        // pick up ball check
-        if (Input.GetKeyDown(KeyCode.RightShift))
+        if (!_isCharging)
         {
-            // user presses space and is not holding a ball, look to pick up ball
-            if (!_isHolding)
+            // movement inputs
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                if(_balls.Length == 0)
-                {
-                    _balls = GameObject.FindGameObjectsWithTag("Ball");
-                }
+                isLinearIdle = false;
+                m_agent.StrafeRight();
+            }
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                isLinearIdle = false;
+                m_agent.StrafeLeft();
+            }
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
+                isLinearIdle = false;
+                m_agent.MoveForwards();
+            }
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                isLinearIdle = false;
+                m_agent.MoveBackwards();
+            }
+            if (Input.GetKey(KeyCode.Q))
+            {
+                isAngularIdle = false;
+                m_agent.TurnLeft();
+            }
+            if (Input.GetKey(KeyCode.E))
+            {
+                isAngularIdle = false;
+                m_agent.TurnRight();
+            }
+            if (isLinearIdle)
+            {
+                m_agent.StopLinearVelocity();
+            }
+            if (isAngularIdle)
+            {
+                m_agent.StopAngularVelocity();
+            }
 
-                foreach (GameObject ball in _balls)
+            // pick up ball check
+            if (Input.GetKeyDown(KeyCode.RightShift))
+            {
+                // user presses space and is not holding a ball, look to pick up ball
+                if (!_isHolding)
                 {
-                    if (Vector3.Distance(gameObject.transform.position, ball.transform.position) < _pickUpDistance)
+                    if (_balls.Length == 0)
                     {
-                        _heldBall = ball;
-                        _isHolding = true;
-                        // return;
+                        _balls = GameObject.FindGameObjectsWithTag("Ball");
+                    }
+
+                    foreach (GameObject ball in _balls)
+                    {
+                        if (Vector3.Distance(gameObject.transform.position, ball.transform.position) < _pickUpDistance)
+                        {
+                            _heldBall = ball;
+                            _isHolding = true;
+                            _heldBall.GetComponent<BallProjectile>().SetIsHeld(true);
+                            // return;
+                        }
                     }
                 }
+                // user presses shift and is holding a ball
+                else
+                {
+                    // start throw behaviour
+                    StartThrowCharge();
+                    _isCharging = true;
+
+                    // perfect accuracy throwing behaviour
+                    /*
+                    _heldBall.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), 1);
+                    _isHolding = false;
+                    _heldBall = null;
+                    _enemyTarget = null;
+                    */
+                }
             }
-            // user presses space and is holding a ball
-            else
+        }
+        else if (_isCharging)
+        {
+            // do charge ending behaviour
+            if(Input.GetKeyUp(KeyCode.RightShift))
             {
-                // start throw behaviour
-                _heldBall.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), 1);
+                _isCharging = false;
+                _chargeEndTime = Time.time;
+
+                _accuracyValue = CalculateAccuracyValue(_chargeStartTime, _chargeEndTime);
+
+
+                // throw ball
+                _heldBall.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), _accuracyValue);
                 _isHolding = false;
                 _heldBall = null;
                 _enemyTarget = null;
+
+                // reset all accuracy variables
+                _chargeEndTime = 0;
+                _chargeStartTime = 0;
+                _accuracyValue = 1;
             }
         }
 
         // holding ball behaviour
-        if(_isHolding)
+        if (_isHolding)
         {
             EnemyDecider();
             _heldBall.transform.position = _holdBallLocation.transform.position;
@@ -139,6 +179,24 @@ public class PlayerController : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
+    }
+
+    private void StartThrowCharge()
+    {
+        _chargeStartTime = Time.time;
+
+    }
+
+    private float CalculateAccuracyValue(float startTime, float endTime)
+    {
+        float timeHeld = endTime - startTime;
+
+        if(timeHeld > 10.0f)
+        {
+            return 1;
+        }
+
+        return timeHeld /= 10;
     }
 
 }
