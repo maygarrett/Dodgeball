@@ -40,34 +40,58 @@ public class GameManager : MonoBehaviour {
     private AIAgentController _playerAgentController;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         _agentControllers = _plane.GetComponents<AIAgentController>();
 
         _playerController = _player.GetComponent<PlayerController>();
         _playerAgentController = GetPlayerAgentController();
-    
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-        if(gameOn)
+
+
+    }
+
+    // Update is called once per frame
+    void Update() {
+
+        if (gameOn)
         {
             // do game on stuff
         }
-	}
+    }
 
     public void StartSimulation()
     {
-        for(int i = 0; i < _agentControllers.Length; i++)
+        gameOn = true;
+        RandomizeBallLocations();
+
+        // make switches that stop player control
+        _simulationCamera.SetActive(true);
+        _playerCamera.SetActive(false);
+        _playerController.enabled = false;
+        _playerAgentController.enabled = true;
+        for (int i = 0; i < _agentControllers.Length; i++)
         {
-            gameOn = true;
-            RandomizeBallLocations();
             _agentControllers[i].ToggleGame();
-            _menuCanvas.enabled = false;
         }
+        _menuCanvas.enabled = false;
     }
+
+    public void StartPlayerGame()
+    {
+        gameOn = true;
+        RandomizeBallLocations();
+
+        // make switches that allow for player control
+        _simulationCamera.SetActive(false);
+        _playerCamera.SetActive(true);
+        _playerController.enabled = true;
+        _playerAgentController.enabled = false;
+        for (int i = 0; i < _agentControllers.Length; i++)
+        {
+            _agentControllers[i].ToggleGame();
+        }
+        _menuCanvas.enabled = false;
+    }
+
 
     private void RandomizeBallLocations()
     {

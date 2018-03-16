@@ -66,12 +66,6 @@ public class AIAgentController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // activate
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            // m_isRunning = !m_isRunning;
-            ToggleGame();
-        }
 
         //scanning and moving
         if(m_isRunning && !_isHoldingBall)
