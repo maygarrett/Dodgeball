@@ -339,7 +339,7 @@ public class AIAgentController : MonoBehaviour {
     {
         if (_enemyTarget && _isHoldingBall)
         {
-            _animator.SetTrigger("Throw");
+            //_animator.SetTrigger("Throw");
 
             // get referemce to ball script
             BallProjectile currentBall = _currentBallTarget.GetComponent<BallProjectile>();
