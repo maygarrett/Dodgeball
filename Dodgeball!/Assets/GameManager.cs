@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour {
     private void RandomizeBallLocations()
     {
         // set a random number of balls in balls[]
-        int numberBalls = Random.Range(1, 5);
+        int numberBalls = Random.Range(2, 5);
         GameObject[] balls = new GameObject[numberBalls];
 
         for(int i = 0; i < balls.Length; i++)

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour {
     private float _accuracyValue = 1;
     private float _chargeStartTime;
     private float _chargeEndTime;
+
+    // accuracy display variables
+    [SerializeField] private GameObject _accuracySlider;
 
 
 	// Use this for initialization
@@ -112,6 +116,7 @@ public class PlayerController : MonoBehaviour {
                     // start throw behaviour
                     StartThrowCharge();
                     _isCharging = true;
+                    _accuracySlider.SetActive(true);
 
                     // perfect accuracy throwing behaviour
                     /*
@@ -125,9 +130,13 @@ public class PlayerController : MonoBehaviour {
         }
         else if (_isCharging)
         {
+            _accuracySlider.GetComponent<Slider>().value = Time.time - _chargeStartTime;
+
             // do charge ending behaviour
             if(Input.GetKeyUp(KeyCode.RightShift))
             {
+                _accuracySlider.SetActive(false);
+
                 _isCharging = false;
                 _chargeEndTime = Time.time;
 
@@ -191,12 +200,12 @@ public class PlayerController : MonoBehaviour {
     {
         float timeHeld = endTime - startTime;
 
-        if(timeHeld > 10.0f)
+        if(timeHeld > 5.0f)
         {
             return 1;
         }
 
-        return timeHeld /= 10;
+        return timeHeld /= 10 * 2;
     }
 
 }
