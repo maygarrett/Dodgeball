@@ -81,6 +81,11 @@ public class PlayerController : MonoBehaviour {
             // user presses space and is not holding a ball, look to pick up ball
             if (!_isHolding)
             {
+                if(_balls.Length == 0)
+                {
+                    _balls = GameObject.FindGameObjectsWithTag("Ball");
+                }
+
                 foreach (GameObject ball in _balls)
                 {
                     if (Vector3.Distance(gameObject.transform.position, ball.transform.position) < _pickUpDistance)
@@ -120,6 +125,19 @@ public class PlayerController : MonoBehaviour {
             { _enemyTarget = enemy; }
             if (Vector3.Distance(gameObject.transform.position, _enemyTarget.transform.position) > Vector3.Distance(gameObject.transform.position, enemy.transform.position))
             { _enemyTarget = enemy; }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameObject.FindObjectOfType<GameManager>().PlayerEliminated();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "PlayerDeath")
+        {
+            Destroy(this.gameObject);
         }
     }
 

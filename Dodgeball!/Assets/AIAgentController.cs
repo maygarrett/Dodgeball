@@ -548,6 +548,7 @@ public class AIAgentController : MonoBehaviour {
         // eliminate player from the game
         Debug.Log(playerEliminated.m_agent.gameObject + " is eliminated");
         Destroy(playerEliminated.m_agent.gameObject);
+        playerEliminated.enabled = false;
         gameManager.CheckPlayers(playerEliminated);
         this.enabled = false;
     }

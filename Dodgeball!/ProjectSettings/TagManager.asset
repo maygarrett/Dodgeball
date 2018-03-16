@@ -9,6 +9,7 @@ TagManager:
   - Ball
   - ThrowCollider
   - Ground
+  - PlayerDeath
   layers:
   - Default
   - TransparentFX

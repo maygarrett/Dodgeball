@@ -8,7 +8,12 @@ public class GameManager : MonoBehaviour {
 
     // storing UI and Hud Canvas'
     [SerializeField] private Canvas _menuCanvas;
-    [SerializeField] private Canvas _gameHUD;
+    [SerializeField] private GameObject _gameHUD;
+
+    // hud text objects
+    [SerializeField] private Text _blueScore;
+    [SerializeField] private Text _redScore;
+    [SerializeField] private GameObject _playerElimText;
 
     // storing all AI controllers
     [SerializeField] private GameObject _plane;
@@ -19,7 +24,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject[] _redTeam;
 
     // ball storage and randomization variables
-    public GameObject[] balls;
+    //private GameObject[] balls;
+    [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private float zMax;
     [SerializeField] private float xMax;
     [SerializeField] private float zMin;
@@ -55,6 +61,10 @@ public class GameManager : MonoBehaviour {
         if (gameOn)
         {
             // do game on stuff
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                ReloadScene();
+            }
         }
     }
 
@@ -73,6 +83,7 @@ public class GameManager : MonoBehaviour {
             _agentControllers[i].ToggleGame();
         }
         _menuCanvas.enabled = false;
+        _gameHUD.SetActive(true);
     }
 
     public void StartPlayerGame()
@@ -90,11 +101,23 @@ public class GameManager : MonoBehaviour {
             _agentControllers[i].ToggleGame();
         }
         _menuCanvas.enabled = false;
+        _gameHUD.SetActive(true);
     }
 
 
     private void RandomizeBallLocations()
     {
+        // set a random number of balls in balls[]
+        int numberBalls = Random.Range(1, 5);
+        GameObject[] balls = new GameObject[numberBalls];
+
+        for(int i = 0; i < balls.Length; i++)
+        {
+            balls[i] = Instantiate(_ballPrefab);
+        }
+
+
+        // set a randome location for the ball
         foreach(GameObject ball in balls)
         {
             float xValue = Random.Range(xMin, xMax);
@@ -139,7 +162,10 @@ public class GameManager : MonoBehaviour {
             }
         }
 
-        if(blueTeam == 0)
+        _blueScore.text = blueTeam.ToString();
+        _redScore.text = redTeam.ToString();
+
+        if (blueTeam == 0)
         {
             Debug.Log("red team wins");
             string winner = "Red Team Wins";
@@ -182,5 +208,12 @@ public class GameManager : MonoBehaviour {
         }
 
         return playerAgent;
+    }
+
+    public void PlayerEliminated()
+    {
+        _simulationCamera.SetActive(true);
+        CheckPlayers(_playerAgentController);
+        _playerElimText.SetActive(true);
     }
 }
