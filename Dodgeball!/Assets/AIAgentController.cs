@@ -540,17 +540,23 @@ public class AIAgentController : MonoBehaviour {
     {
         // check to see if they catch the ball
         bool tempCatch = isACatch();
-        // if they catch
-        if (tempCatch)
+
+        if (attacker != this)
         {
-            _currentBallTarget = ball;
-            PickUpBall();
-            attacker.Eliminate(attacker);
-        }
-        // if not
-        else if(attacker != this)
-        {
-            Eliminate(this);
+
+            // if they catch
+            if (tempCatch)
+            {
+                _currentBallTarget = ball;
+                PickUpBall();
+                attacker.Eliminate(attacker);
+            }
+
+            // if not
+            else
+            {
+                Eliminate(this);
+            }
         }
         else { ball.GetComponent<BallProjectile>()._lastThrower = this; }
     }
