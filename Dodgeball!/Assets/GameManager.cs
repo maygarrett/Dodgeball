@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour {
     {
         Debug.Log("Game is Over");
         gameOn = false;
-        _gameOverCanvas.enabled = true;
+        _gameOverCanvas.gameObject.SetActive(true);
         _winnerText.text = winner;
         //Time.timeScale = 0;
     }
