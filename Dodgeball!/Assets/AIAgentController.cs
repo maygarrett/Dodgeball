@@ -43,7 +43,7 @@ public class AIAgentController : MonoBehaviour {
     [SerializeField] private float redXMin;
     [SerializeField] private float redZMax;
     [SerializeField] private float redZMin;
-    [SerializeField] private bool _isBlue;
+    public bool _isBlue;
 
     // Agent Tracking variables
     [SerializeField] private float _agentDistanceBuffer;
@@ -54,10 +54,14 @@ public class AIAgentController : MonoBehaviour {
     // teammates
     [SerializeField] private GameObject[] _teammates;
 
+    private GameManager gameManager;
+
+
+
 
     // Use this for initialization
     void Start () {
-		
+        gameManager = FindObjectOfType<GameManager>();
 	}
 	
 	// Update is called once per frame
@@ -324,7 +328,6 @@ public class AIAgentController : MonoBehaviour {
         if (!_currentBallTarget.GetComponent<BallProjectile>().GetIsHeld())
         {
             _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(true);
-            Debug.Log("Picking up ball");
             _isHoldingBall = true;
         }
     }
@@ -550,7 +553,8 @@ public class AIAgentController : MonoBehaviour {
     {
         // eliminate player from the game
         Debug.Log(playerEliminated.m_agent.gameObject + " is eliminated");
-        Destroy(m_agent.gameObject);
+        Destroy(playerEliminated.m_agent.gameObject);
+        gameManager.CheckPlayers(playerEliminated);
         this.enabled = false;
     }
 

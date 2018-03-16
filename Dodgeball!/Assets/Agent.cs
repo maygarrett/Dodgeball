@@ -21,6 +21,8 @@ public class Agent : MonoBehaviour {
     [SerializeField] private GameObject _plane;
     public AIAgentController _agentController;
 
+    public bool _isBlue;
+
     public float linearSpeed
     {
         get;
@@ -66,11 +68,13 @@ public class Agent : MonoBehaviour {
         {
             //blue
             SetMaterial(m_blueMaterial);
+            _isBlue = true;
         }
         else
         {
             //red
             SetMaterial(m_redMaterial);
+            _isBlue = false;
         }
     }
 

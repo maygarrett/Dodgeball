@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -26,8 +28,12 @@ public class GameManager : MonoBehaviour {
     // game variables
     public bool gameOn = false;
 
-	// Use this for initialization
-	void Start () {
+    // game over stuff
+    [SerializeField] private Canvas _gameOverCanvas;
+    [SerializeField] private Text _winnerText;
+
+    // Use this for initialization
+    void Start () {
         _agentControllers = _plane.GetComponents<AIAgentController>();
 		
 	}
@@ -37,8 +43,7 @@ public class GameManager : MonoBehaviour {
 		
         if(gameOn)
         {
-            CheckBlueTeam();
-            CheckRedTeam();
+            // do game on stuff
         }
 	}
 
@@ -70,43 +75,60 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void CheckBlueTeam()
+    public void CheckPlayers(AIAgentController mostRecentElimination)
     {
-        int playersLeft = _redTeam.Length;
-        foreach(GameObject player in _redTeam)
+        Debug.Log("checking players to see if alive");
+        int blueTeam = 0;
+        int redTeam = 0;
+
+        Agent[] players = FindObjectsOfType<Agent>();
+        Debug.Log("found " + players.Length + " players");
+        foreach (Agent player in players)
         {
-            if(player == null)
+            if(player.gameObject == mostRecentElimination.m_agent.gameObject)
             {
-                playersLeft--;
+                continue;
+            }
+
+            Debug.Log("player " + player.gameObject.name + " is still alive");
+
+            if (player._isBlue)
+            {
+                blueTeam++;
+                Debug.Log("adding one to blue team");
+            }
+            else
+            {
+                redTeam++;
+                Debug.Log("adding one to red team");
             }
         }
 
-        if(playersLeft <= 0)
+        if(blueTeam == 0)
         {
-            GameOver();
+            Debug.Log("red team wins");
+            string winner = "Red Team Wins";
+            GameOver(winner);
+        }
+        else if(redTeam == 0)
+        {
+            Debug.Log("blue team wins");
+            string winner = "Blue Team Wins";
+            GameOver(winner);
         }
     }
 
-    private void CheckRedTeam()
+    private void GameOver(string winner)
     {
-        int playersLeft = _redTeam.Length;
-        foreach (GameObject player in _blueTeam)
-        {
-            if (player == null)
-            {
-                playersLeft--;
-            }
-        }
-
-        if (playersLeft <= 0)
-        {
-            GameOver();
-        }
-    }
-
-    private void GameOver()
-    {
+        Debug.Log("Game is Over");
         gameOn = false;
-        Time.timeScale = 0;
+        _gameOverCanvas.enabled = true;
+        _winnerText.text = winner;
+        //Time.timeScale = 0;
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(0);
     }
 }
