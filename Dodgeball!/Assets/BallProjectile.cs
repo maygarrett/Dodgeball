@@ -142,6 +142,7 @@ public class BallProjectile : MonoBehaviour {
             {
                 Debug.Log(collision.gameObject.name + " got Hit");
                 collision.gameObject.GetComponent<Agent>()._agentController.GotHit(_lastThrower);
+                _isThrown = false;
                 _lastThrower = null;
             }
         }

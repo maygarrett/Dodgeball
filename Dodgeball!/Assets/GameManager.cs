@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject _plane;
     private AIAgentController[] _agentControllers;
 
+    // ball storage and randomization variables
+    public GameObject[] balls;
+    [SerializeField] private float zMax;
+    [SerializeField] private float xMax;
+
 	// Use this for initialization
 	void Start () {
         _agentControllers = _plane.GetComponents<AIAgentController>();
@@ -23,7 +28,18 @@ public class GameManager : MonoBehaviour {
     {
         for(int i = 0; i < _agentControllers.Length; i++)
         {
+            RandomizeBallLocations();
             _agentControllers[i].ToggleGame();
+        }
+    }
+
+    private void RandomizeBallLocations()
+    {
+        foreach(GameObject ball in balls)
+        {
+            float xValue = Random.Range(-xMax, xMax);
+            float zValue = Random.Range(-zMax, zMax);
+            ball.transform.position = new Vector3(xValue, ball.transform.position.y, zValue);
         }
     }
 }
