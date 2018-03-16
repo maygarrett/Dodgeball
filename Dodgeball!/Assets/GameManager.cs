@@ -216,4 +216,9 @@ public class GameManager : MonoBehaviour {
         CheckPlayers(_playerAgentController);
         _playerElimText.SetActive(true);
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
