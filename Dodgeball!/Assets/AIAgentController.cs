@@ -65,7 +65,8 @@ public class AIAgentController : MonoBehaviour {
         // activate
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            m_isRunning = !m_isRunning;
+            // m_isRunning = !m_isRunning;
+            ToggleGame();
         }
 
         //scanning and moving
@@ -90,8 +91,8 @@ public class AIAgentController : MonoBehaviour {
             }
             else _isHoldingBall = false;
             //ScanForEnemy();
-            MoveTowardsEnemy();
 
+            MoveTowardsEnemy();
         }
     }
 
@@ -542,7 +543,8 @@ public class AIAgentController : MonoBehaviour {
     {
         // eliminate player from the game
         Debug.Log(playerEliminated.m_agent.gameObject + " is eliminated");
-        //this.enabled = false;
+        Destroy(m_agent.gameObject);
+        this.enabled = false;
     }
 
     private bool isACatch()
@@ -554,6 +556,11 @@ public class AIAgentController : MonoBehaviour {
             return false;
         }
         else return true;
+    }
+
+    public void ToggleGame()
+    {
+        m_isRunning = !m_isRunning;
     }
 
 }
