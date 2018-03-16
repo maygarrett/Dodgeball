@@ -1401,6 +1401,7 @@ MonoBehaviour:
   m_angularAcceleration: 2
   _plane: {fileID: 0}
   _agentController: {fileID: 0}
+  _isBlue: 0
 --- !u!54 &1004794375
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2042,7 +2043,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1117754853}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd7cbb034c1e59447a033d8d29feae25, type: 3}
   m_Name: 
@@ -2719,6 +2720,9 @@ MonoBehaviour:
   gameOn: 0
   _gameOverCanvas: {fileID: 1562907024}
   _winnerText: {fileID: 1200044813}
+  _simulationCamera: {fileID: 1993200637}
+  _playerCamera: {fileID: 1207080239}
+  _player: {fileID: 1780769218}
 --- !u!4 &1328067625
 Transform:
   m_ObjectHideFlags: 0
@@ -2815,6 +2819,7 @@ MonoBehaviour:
   m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
+  _isBlue: 0
 --- !u!54 &1337271349
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4077,6 +4082,7 @@ GameObject:
   - component: {fileID: 1780769221}
   - component: {fileID: 1780769220}
   - component: {fileID: 1780769219}
+  - component: {fileID: 1780769226}
   m_Layer: 8
   m_Name: AIAgentBlue2
   m_TagString: Agent
@@ -4118,6 +4124,7 @@ MonoBehaviour:
   m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
+  _isBlue: 0
 --- !u!54 &1780769221
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4205,6 +4212,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1780769226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1780769218}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d3d1289469cc24a82985bf965f88d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_agent: {fileID: 1780769220}
 --- !u!1 &1836005276
 GameObject:
   m_ObjectHideFlags: 0
@@ -4260,6 +4279,7 @@ MonoBehaviour:
   m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
+  _isBlue: 0
 --- !u!54 &1836005279
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4832,6 +4852,7 @@ MonoBehaviour:
   m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
+  _isBlue: 0
 --- !u!54 &2050039430
 Rigidbody:
   m_ObjectHideFlags: 0

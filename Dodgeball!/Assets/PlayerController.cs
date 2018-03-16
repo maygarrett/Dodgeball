@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public Agent m_agent = null;
+    public Agent m_agent;
 	// Use this for initialization
 	void Start () {
 		

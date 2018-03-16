@@ -32,9 +32,20 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private Canvas _gameOverCanvas;
     [SerializeField] private Text _winnerText;
 
+    // player or simulation toggle stuff
+    [SerializeField] private GameObject _simulationCamera;
+    [SerializeField] private GameObject _playerCamera;
+    [SerializeField] private GameObject _player;
+    private PlayerController _playerController;
+    private AIAgentController _playerAgentController;
+
     // Use this for initialization
     void Start () {
         _agentControllers = _plane.GetComponents<AIAgentController>();
+
+        _playerController = _player.GetComponent<PlayerController>();
+        _playerAgentController = GetPlayerAgentController();
+    
 		
 	}
 	
@@ -130,5 +141,22 @@ public class GameManager : MonoBehaviour {
     public void ReloadScene()
     {
         SceneManager.LoadScene(0);
+    }
+
+    private AIAgentController GetPlayerAgentController()
+    {
+        AIAgentController[] players = _plane.GetComponents<AIAgentController>();
+
+        AIAgentController playerAgent = null;
+
+        for(int i = 0; i < players.Length; i++)
+        {
+            if(players[i].m_agent.gameObject == _player)
+            {
+                playerAgent = players[i];
+            }
+        }
+
+        return playerAgent;
     }
 }
