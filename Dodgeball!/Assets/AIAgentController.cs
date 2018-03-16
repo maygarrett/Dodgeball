@@ -303,7 +303,7 @@ public class AIAgentController : MonoBehaviour {
                         _currentBallTarget = hitCollider.gameObject;
 
                     }
-                    if (_currentBallTarget)
+                    if (!_currentBallTarget)
                     {
                         OnDestinationFound(hitCollider.transform.position);
                     }
@@ -505,6 +505,11 @@ public class AIAgentController : MonoBehaviour {
     {
         foreach(GameObject enemy in _enemies)
         {
+            if(enemy == null)
+            {
+                continue;
+            }
+
             if(_enemyTarget == null)
             {
                 _enemyTarget = enemy;
@@ -523,13 +528,15 @@ public class AIAgentController : MonoBehaviour {
         _currentBallTarget = null;
     }
 
-    public void GotHit(AIAgentController attacker)
+    public void GotHit(AIAgentController attacker, GameObject ball)
     {
         // check to see if they catch the ball
         bool tempCatch = isACatch();
         // if they catch
         if (tempCatch)
         {
+            _currentBallTarget = ball;
+            PickUpBall();
             attacker.Eliminate(attacker);
         }
         // if not

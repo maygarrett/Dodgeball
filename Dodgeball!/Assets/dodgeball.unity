@@ -826,7 +826,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 557513961}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.05, y: 0, z: -0.4500008}
+  m_LocalPosition: {x: -1.47, y: 0, z: -0.4500008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1780769225}
@@ -854,7 +854,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 576846569}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.05, y: 0, z: -0.4500008}
+  m_LocalPosition: {x: -1.18, y: 0, z: -0.4500008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2050039428}
@@ -2504,7 +2504,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f695be7b6c9e94241916d83d06add3ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _menuCanvas: {fileID: 1939984201}
+  _gameHUD: {fileID: 0}
   _plane: {fileID: 1117754853}
+  _blueTeam:
+  - {fileID: 2050039424}
+  - {fileID: 1780769218}
+  _redTeam:
+  - {fileID: 1836005276}
+  - {fileID: 1337271346}
+  balls:
+  - {fileID: 940707556}
+  - {fileID: 192811569}
+  zMax: 30
+  xMax: 30
+  zMin: 10
+  xMin: 10
+  gameOn: 0
 --- !u!4 &1328067625
 Transform:
   m_ObjectHideFlags: 0
@@ -2540,7 +2556,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1335281420}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.05, y: 0, z: 0.45000076}
+  m_LocalPosition: {x: 1.5, y: 0, z: 0.45000076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1337271353}
@@ -2596,9 +2612,9 @@ MonoBehaviour:
   m_blueMaterial: {fileID: 2100000, guid: 6b79a65779001de43bee93e19cd2d22e, type: 2}
   m_defaultMaterial: {fileID: 2100000, guid: 20dbdc86f88247c4ebb6cfc0cb49f462, type: 2}
   m_linearMaxSpeed: 5
-  m_angularMaxSpeed: 5
+  m_angularMaxSpeed: 20
   m_linearAcceleration: 2
-  m_angularAcceleration: 3
+  m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
 --- !u!54 &1337271349
@@ -3655,9 +3671,9 @@ MonoBehaviour:
   m_blueMaterial: {fileID: 2100000, guid: 6b79a65779001de43bee93e19cd2d22e, type: 2}
   m_defaultMaterial: {fileID: 2100000, guid: 20dbdc86f88247c4ebb6cfc0cb49f462, type: 2}
   m_linearMaxSpeed: 5
-  m_angularMaxSpeed: 5
+  m_angularMaxSpeed: 20
   m_linearAcceleration: 2
-  m_angularAcceleration: 3
+  m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
 --- !u!54 &1780769221
@@ -3797,9 +3813,9 @@ MonoBehaviour:
   m_blueMaterial: {fileID: 2100000, guid: 6b79a65779001de43bee93e19cd2d22e, type: 2}
   m_defaultMaterial: {fileID: 2100000, guid: 20dbdc86f88247c4ebb6cfc0cb49f462, type: 2}
   m_linearMaxSpeed: 5
-  m_angularMaxSpeed: 5
+  m_angularMaxSpeed: 20
   m_linearAcceleration: 2
-  m_angularAcceleration: 3
+  m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
 --- !u!54 &1836005279
@@ -4369,9 +4385,9 @@ MonoBehaviour:
   m_blueMaterial: {fileID: 2100000, guid: 6b79a65779001de43bee93e19cd2d22e, type: 2}
   m_defaultMaterial: {fileID: 2100000, guid: 20dbdc86f88247c4ebb6cfc0cb49f462, type: 2}
   m_linearMaxSpeed: 5
-  m_angularMaxSpeed: 5
+  m_angularMaxSpeed: 20
   m_linearAcceleration: 2
-  m_angularAcceleration: 3
+  m_angularAcceleration: 10
   _plane: {fileID: 1117754853}
   _agentController: {fileID: 0}
 --- !u!54 &2050039430
@@ -4616,7 +4632,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2145612716}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.05, y: 0, z: 0.45000076}
+  m_LocalPosition: {x: 1.46, y: 0, z: 0.45000076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1836005283}
