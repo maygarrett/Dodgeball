@@ -54,6 +54,11 @@ public class AIAgentController : MonoBehaviour {
     // teammates
     [SerializeField] private GameObject[] _teammates;
 
+    // animator
+    private Animator _animator;
+    // model that has animator component
+    [SerializeField] private GameObject _model;
+
     private GameManager gameManager;
 
 
@@ -62,6 +67,7 @@ public class AIAgentController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         gameManager = FindObjectOfType<GameManager>();
+        _animator = _model.GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -149,9 +155,12 @@ public class AIAgentController : MonoBehaviour {
         // if there are no more path nodes, stop moving
         if(!HasDestination())
         {
+            _animator.SetBool("IsRunning", false);
             m_agent.StopAngularVelocity();
             return;
         }
+
+        _animator.SetBool("IsRunning", true);
 
         // calculate all movement and speeds angles etc for moving towards destination
         Vector3 destination = m_pathList[0];
@@ -330,6 +339,8 @@ public class AIAgentController : MonoBehaviour {
     {
         if (_enemyTarget && _isHoldingBall)
         {
+            _animator.SetTrigger("Throw");
+
             // get referemce to ball script
             BallProjectile currentBall = _currentBallTarget.GetComponent<BallProjectile>();
 
@@ -537,10 +548,11 @@ public class AIAgentController : MonoBehaviour {
             attacker.Eliminate(attacker);
         }
         // if not
-        else
+        else if(attacker != this)
         {
             Eliminate(this);
         }
+        else { ball.GetComponent<BallProjectile>()._lastThrower = this; }
     }
 
     public void Eliminate(AIAgentController playerEliminated)

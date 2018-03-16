@@ -27,12 +27,16 @@ public class PlayerController : MonoBehaviour {
     // accuracy display variables
     [SerializeField] private GameObject _accuracySlider;
 
+    // animation
+    [SerializeField] private GameObject _model;
+    private Animator _animator;
+
 
 	// Use this for initialization
 	void Start () {
 
         _balls = GameObject.FindGameObjectsWithTag("Ball");
-		
+        _animator = _model.GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -63,6 +67,7 @@ public class PlayerController : MonoBehaviour {
             {
                 isLinearIdle = false;
                 m_agent.MoveForwards();
+                _animator.SetBool("IsRunning", true);
             }
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
             {
@@ -82,6 +87,7 @@ public class PlayerController : MonoBehaviour {
             if (isLinearIdle)
             {
                 m_agent.StopLinearVelocity();
+                _animator.SetBool("IsRunning", false);
             }
             if (isAngularIdle)
             {
@@ -145,6 +151,8 @@ public class PlayerController : MonoBehaviour {
 
                 // throw ball
                 _heldBall.GetComponent<BallProjectile>().ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), _accuracyValue);
+                _animator.SetTrigger("Throw");
+                _animator.SetBool("IsCharging", false);
                 _isHolding = false;
                 _heldBall = null;
                 _enemyTarget = null;
@@ -193,7 +201,7 @@ public class PlayerController : MonoBehaviour {
     private void StartThrowCharge()
     {
         _chargeStartTime = Time.time;
-
+        _animator.SetBool("IsCharging", true);
     }
 
     private float CalculateAccuracyValue(float startTime, float endTime)
