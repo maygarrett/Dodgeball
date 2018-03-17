@@ -406,11 +406,11 @@ public class AIAgentController : MonoBehaviour {
             // get referemce to ball script
             BallProjectile currentBall = _currentBallTarget.GetComponent<BallProjectile>();
 
-            currentBall.SetIsHeld(false);
+            //currentBall.SetIsHeld(false);
             // determining accuracy
             float accuracy = Random.Range(0.6f, 1.4f);
-            currentBall.ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
             currentBall._lastThrower = this;
+            currentBall.ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
             _isHoldingBall = false;
             _currentBallTarget = null;
             //ScanForObjects();

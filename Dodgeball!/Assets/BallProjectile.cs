@@ -135,6 +135,7 @@ public class BallProjectile : MonoBehaviour {
         {
             _isThrown = false;
             _lastThrower = null;
+            _isHeld = false;
         }
 
         if (collision.gameObject.tag == "Agent")
@@ -145,6 +146,7 @@ public class BallProjectile : MonoBehaviour {
                 collision.gameObject.GetComponent<Agent>()._agentController.GotHit(_lastThrower, gameObject);
                 _isThrown = false;
                 _lastThrower = null;
+                _isHeld = false;
             }
         }
     }
