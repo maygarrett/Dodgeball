@@ -3078,8 +3078,8 @@ MonoBehaviour:
   m_enemyDestinationBuffer: 50
   m_enemyScanDistance: 300
   _rayPosition: {fileID: 1639729972}
-  blueXMax: 30
-  blueXMin: -30
+  blueXMax: 10
+  blueXMin: -10
   blueZMax: 35
   blueZMin: 30
   redXMax: 0
@@ -3123,8 +3123,8 @@ MonoBehaviour:
   blueXMin: 0
   blueZMax: 0
   blueZMin: 0
-  redXMax: 30
-  redXMin: -30
+  redXMax: 10
+  redXMin: -10
   redZMax: -30
   redZMin: -35
   _isBlue: 0
@@ -3160,8 +3160,8 @@ MonoBehaviour:
   m_enemyDestinationBuffer: 50
   m_enemyScanDistance: 300
   _rayPosition: {fileID: 234325827}
-  blueXMax: 30
-  blueXMin: -30
+  blueXMax: 10
+  blueXMin: -10
   blueZMax: 35
   blueZMin: 30
   redXMax: 0
@@ -3205,8 +3205,8 @@ MonoBehaviour:
   blueXMin: 0
   blueZMax: 0
   blueZMin: 0
-  redXMax: 30
-  redXMin: -30
+  redXMax: 10
+  redXMin: -10
   redZMax: -30
   redZMin: -35
   _isBlue: 0

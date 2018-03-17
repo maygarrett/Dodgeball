@@ -217,6 +217,7 @@ public class AIAgentController : MonoBehaviour {
         {
             PickUpBall();
         }
+
     }
 
     // function draws out a path for the agent using navmesh
@@ -261,7 +262,7 @@ public class AIAgentController : MonoBehaviour {
         if (hitColliders.Length == 0)
         {
             // add a random location to OnDestinationFound
-            
+            m_pathList.Clear();
             Vector3 randomLocation = GenerateRandomLocation(_isBlue);
             OnDestinationFound(randomLocation);
         }
@@ -373,6 +374,7 @@ public class AIAgentController : MonoBehaviour {
             currentBall._lastThrower = this;
             _isHoldingBall = false;
             _currentBallTarget = null;
+            ScanForObjects();
         }
     }
 
