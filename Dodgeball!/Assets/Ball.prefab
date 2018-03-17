@@ -139,7 +139,6 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -265,7 +264,7 @@ MonoBehaviour:
   m_targetTransform: {fileID: 0}
   m_minSpeed: 2
   m_movingTarget: {fileID: 0}
-  m_desiredAirTime: 2
+  m_desiredAirTime: 1
   _isThrown: 0
   _lastThrower: {fileID: 0}
 --- !u!114 &114249291133093024

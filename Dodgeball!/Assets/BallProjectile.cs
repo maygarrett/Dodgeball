@@ -111,6 +111,7 @@ public class BallProjectile : MonoBehaviour {
         _accuracyValue = accuracy;
         m_rb.velocity = CalculateInitialVelocityMovingTarget();
         _isThrown = true;
+        _isHeld = false;
     }
 
     public void SetBallTarget(BasicVelocity movingTarget)

@@ -175,28 +175,6 @@ public class AIAgentController : MonoBehaviour {
             destination = _currentBallTarget.transform.position;
         }
 
-        // check if destination is on correct side of court
-        if (_isBlue)
-        {
-            if (destination.z < 0)
-            {
-                _currentBallTarget = null;
-                m_pathList.Clear();
-                destination = GenerateRandomLocation(_isBlue);
-                m_pathList.Add(destination);
-            }
-        }
-        else
-        {
-            if (destination.z > 0)
-            {
-                _currentBallTarget = null;
-                m_pathList.Clear();
-                destination = GenerateRandomLocation(_isBlue);
-                m_pathList.Add(destination);
-            }
-        }
-
         Vector3 toDestination = destination - m_agent.transform.position;
         float distanceToDestination = toDestination.magnitude;
         toDestination.Normalize();
@@ -294,6 +272,8 @@ public class AIAgentController : MonoBehaviour {
                 m_pathList.Clear();
             }
 
+            _currentBallTarget = null;
+
             foreach (Collider hitCollider in hitColliders)
             {
 
@@ -303,25 +283,67 @@ public class AIAgentController : MonoBehaviour {
                     continue;
                 }
 
-                if (hitCollider.gameObject.tag == "Ball")
+                // if the player detects a ball
+                if(hitCollider.gameObject.tag == "Ball")
                 {
                     if (!hitCollider.gameObject.GetComponent<BallProjectile>().GetIsHeld())
                     {
-                        _currentBallTarget = hitCollider.gameObject;
+                        // check if destination is on correct side of court
+                        if (_isBlue)
+                        {
+                            if (hitCollider.transform.position.z > 0)
+                            {
+                                // if there is no target set the current target to that
+                                if (!_currentBallTarget)
+                                {
+                                    _currentBallTarget = hitCollider.gameObject;
+                                    OnDestinationFound(hitCollider.transform.position);
+                                    continue;
+                                }
 
-                    }
-                    if (!_currentBallTarget)
-                    {
-                        OnDestinationFound(hitCollider.transform.position);
-                    }
-                    else
-                    {
-                        Vector3 randomLocation = GenerateRandomLocation(_isBlue);
-                        OnDestinationFound(randomLocation);
+                                // if the distance between the current target and this recent ball collider is less, set a new _currentballtarget
+                                if (Vector3.Distance(_currentBallTarget.transform.position, m_agent.transform.position) > Vector3.Distance(hitCollider.transform.position, m_agent.transform.position))
+                                {
+                                    _currentBallTarget = hitCollider.gameObject;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (hitCollider.transform.position.z < 0)
+                            {
+                                // if there is no target set the current target to that
+                                if (!_currentBallTarget)
+                                {
+                                    _currentBallTarget = hitCollider.gameObject;
+                                    OnDestinationFound(hitCollider.transform.position);
+                                    continue;
+                                }
+
+                                // if the distance between the current target and this recent ball collider is less, set a new _currentballtarget
+                                if (Vector3.Distance(_currentBallTarget.transform.position, m_agent.transform.position) > Vector3.Distance(hitCollider.transform.position, m_agent.transform.position))
+                                {
+                                    _currentBallTarget = hitCollider.gameObject;
+                                }
+
+                            }
+                        }
                     }
 
-                    break;
                 }
+            } // end of for loop
+
+            // if we set a current target
+            if(_currentBallTarget)
+            {
+                // set the destination to that
+                OnDestinationFound(_currentBallTarget.transform.position);
+            }
+            else
+            {
+                // go to a random location
+                Vector3 randomLocation = GenerateRandomLocation(_isBlue);
+                OnDestinationFound(randomLocation);
             }
         }
     }
@@ -346,35 +368,13 @@ public class AIAgentController : MonoBehaviour {
 
             currentBall.SetIsHeld(false);
             // determining accuracy
-            float accuracy = Random.Range(0.9f, 1.1f);
+            float accuracy = Random.Range(0.6f, 1.4f);
             currentBall.ThrowBall(_enemyTarget.gameObject.GetComponent<BasicVelocity>(), accuracy);
             currentBall._lastThrower = this;
             _isHoldingBall = false;
             _currentBallTarget = null;
         }
     }
-
-    /*
-    void ScanForEnemy()
-    {
-        int layer = LayerMask.NameToLayer("Agent");
-        int layerMask = 1 << layer;
-        Collider[] hitColliders = Physics.OverlapSphere(m_agent.transform.position, m_enemyScanDistance, layerMask);
-        foreach(Collider Target in hitColliders)
-        {
-            if(Target != gameObject.GetComponent<Collider>())
-            {
-                _enemyTarget = Target.gameObject;
-                _currentBallTarget.gameObject.GetComponent<BallProjectile>().m_movingTarget = _enemyTarget.gameObject.GetComponent<BasicVelocity>();
-            }
-            else
-            {
-                /_enemyTarget = GameObject.FindGameObjectWithTag("Agent");
-                _currentBallTarget.gameObject.GetComponent<BallProjectile>().m_movingTarget = _enemyTarget.gameObject.GetComponent<BasicVelocity>();
-            }
-        }
-    
-    }*/
 
 
     void MoveTowardsEnemy()
@@ -383,25 +383,6 @@ public class AIAgentController : MonoBehaviour {
         {
 
             Vector3 destination = _enemyTarget.transform.position;
-
-            /*// account for issues with crossing line while seeking enemy
-            if (Mathf.Abs(_enemyTarget.transform.position.x - gameObject.transform.position.x) > _agentXBuffer)
-            {
-                _isNewTracking = true;
-
-                if (_isBlue)
-                {
-                    destination = new Vector3(_enemyTarget.transform.position.x, _enemyTarget.transform.position.y, 10.0f);
-                }
-                else
-                {
-                    destination = new Vector3(_enemyTarget.transform.position.x, _enemyTarget.transform.position.y, -10.0f);
-                }
-            }
-            else
-            {
-                _isNewTracking = false;
-            }*/
             
             Vector3 toDestination = destination - m_agent.transform.position;
             float distanceToDestination = toDestination.magnitude;

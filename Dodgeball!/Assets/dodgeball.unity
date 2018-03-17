@@ -548,8 +548,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 8.495103, z: 1}
+  m_Center: {x: 0, y: 3.7475498, z: 0}
 --- !u!33 &171710341
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1061,8 +1061,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 9.067329, z: 1}
+  m_Center: {x: -0, y: 4.0336647, z: 0}
 --- !u!33 &443483048
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3067,7 +3067,7 @@ MonoBehaviour:
   m_minAngularSpeedAngle: 5
   m_maxSpeedDistance: 1
   m_destinationBuffer: 2
-  m_scanDistance: 60
+  m_scanDistance: 80
   _currentBallTarget: {fileID: 0}
   _isHoldingBall: 0
   _holdPosition: {fileID: 2108551070}
@@ -3108,7 +3108,7 @@ MonoBehaviour:
   m_minAngularSpeedAngle: 5
   m_maxSpeedDistance: 1
   m_destinationBuffer: 2
-  m_scanDistance: 60
+  m_scanDistance: 80
   _currentBallTarget: {fileID: 0}
   _isHoldingBall: 0
   _holdPosition: {fileID: 1244195690}
@@ -3149,7 +3149,7 @@ MonoBehaviour:
   m_minAngularSpeedAngle: 5
   m_maxSpeedDistance: 1
   m_destinationBuffer: 2
-  m_scanDistance: 60
+  m_scanDistance: 80
   _currentBallTarget: {fileID: 0}
   _isHoldingBall: 0
   _holdPosition: {fileID: 2025500398}
@@ -3190,7 +3190,7 @@ MonoBehaviour:
   m_minAngularSpeedAngle: 5
   m_maxSpeedDistance: 1
   m_destinationBuffer: 2
-  m_scanDistance: 60
+  m_scanDistance: 80
   _currentBallTarget: {fileID: 0}
   _isHoldingBall: 0
   _holdPosition: {fileID: 544292256}
@@ -3974,7 +3974,7 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1337271346}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a54d2d55c10fab44c9c6d5dcb1c575ab, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -4006,6 +4006,115 @@ Transform:
   - {fileID: 653150254}
   m_Father: {fileID: 0}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1380388400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1380388402}
+  - component: {fileID: 1380388401}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1380388401
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1380388400}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 9f1e9d758f24d574eaf20a776e54e60e, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!4 &1380388402
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1380388400}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.377343, y: 3.2239623, z: 10.882102}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1389516856
 GameObject:
@@ -4476,8 +4585,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5.9826345, z: 1}
+  m_Center: {x: 0, y: 2.4913154, z: 0}
 --- !u!33 &1534929960
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5509,7 +5618,7 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1780769218}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a54d2d55c10fab44c9c6d5dcb1c575ab, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -5825,7 +5934,7 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1836005276}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a54d2d55c10fab44c9c6d5dcb1c575ab, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -6718,7 +6827,7 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2050039424}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a54d2d55c10fab44c9c6d5dcb1c575ab, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -6978,8 +7087,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 8.031117, z: 1}
+  m_Center: {x: 0, y: 3.515558, z: 0}
 --- !u!33 &2100791148
 MeshFilter:
   m_ObjectHideFlags: 0
