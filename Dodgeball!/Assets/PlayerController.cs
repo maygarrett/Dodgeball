@@ -169,6 +169,7 @@ public class PlayerController : MonoBehaviour {
         {
             EnemyDecider();
             _heldBall.transform.position = _holdBallLocation.transform.position;
+            _heldBall.GetComponent<BallProjectile>().SetIsHeld(true);
         }
     }
 

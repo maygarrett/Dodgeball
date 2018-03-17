@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BallProjectile : MonoBehaviour {
 
-    public bool m_isRunning = false;
+    //public bool m_isRunning = false;
     private Rigidbody m_rb = null;
 
     public Vector3 m_initialVelocity = Vector3.zero;
@@ -16,7 +16,7 @@ public class BallProjectile : MonoBehaviour {
     public BasicVelocity m_movingTarget = null;
     public float m_desiredAirTime = 1.0f;
 
-    private bool _isHeld = false;
+    [SerializeField]  private bool _isHeld = false;
     public bool _isThrown = false;
 
     // useable accuracy value --- farther from 0 the less accurate
@@ -106,12 +106,12 @@ public class BallProjectile : MonoBehaviour {
     public void ThrowBall(BasicVelocity movingTarget, float accuracy)
     {
 
-        m_isRunning = !m_isRunning;
+        //m_isRunning = !m_isRunning;
         SetBallTarget(movingTarget);
         _accuracyValue = accuracy;
         m_rb.velocity = CalculateInitialVelocityMovingTarget();
         _isThrown = true;
-        _isHeld = false;
+        //_isHeld = false;
     }
 
     public void SetBallTarget(BasicVelocity movingTarget)
@@ -146,6 +146,14 @@ public class BallProjectile : MonoBehaviour {
                 _isThrown = false;
                 _lastThrower = null;
             }
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            _isHeld = false;
         }
     }
 }

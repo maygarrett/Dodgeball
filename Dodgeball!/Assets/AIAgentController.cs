@@ -175,6 +175,32 @@ public class AIAgentController : MonoBehaviour {
             destination = _currentBallTarget.transform.position;
         }
 
+        // check if destination is on correct side of court
+        if (_isBlue)
+        {
+            if (destination.z < 0)
+            {
+                _currentBallTarget = null;
+                m_pathList.Clear();
+                /*destination = GenerateRandomLocation(_isBlue);
+                m_pathList.Add(destination);*/
+                ScanForObjects();
+                destination = m_pathList[0];
+            }
+        }
+        else
+        {
+            if (destination.z > 0)
+            {
+                _currentBallTarget = null;
+                m_pathList.Clear();
+                /*destination = GenerateRandomLocation(_isBlue);
+                m_pathList.Add(destination);*/
+                ScanForObjects();
+                destination = m_pathList[0];
+            }
+        }
+
         Vector3 toDestination = destination - m_agent.transform.position;
         float distanceToDestination = toDestination.magnitude;
         toDestination.Normalize();
@@ -217,7 +243,6 @@ public class AIAgentController : MonoBehaviour {
         {
             PickUpBall();
         }
-
     }
 
     // function draws out a path for the agent using navmesh
@@ -265,6 +290,7 @@ public class AIAgentController : MonoBehaviour {
             m_pathList.Clear();
             Vector3 randomLocation = GenerateRandomLocation(_isBlue);
             OnDestinationFound(randomLocation);
+            _currentBallTarget = null;
         }
         else
         {
@@ -309,7 +335,7 @@ public class AIAgentController : MonoBehaviour {
                                 }
                             }
                         }
-                        else
+                        else if(!_isBlue)
                         {
                             if (hitCollider.transform.position.z < 0)
                             {
@@ -345,16 +371,20 @@ public class AIAgentController : MonoBehaviour {
                 // go to a random location
                 Vector3 randomLocation = GenerateRandomLocation(_isBlue);
                 OnDestinationFound(randomLocation);
+                _currentBallTarget = null;
             }
         }
     }
 
     void PickUpBall()
     {
-        if (!_currentBallTarget.GetComponent<BallProjectile>().GetIsHeld())
+        Debug.Log("Calling pick up ball");
+        Debug.Log(_currentBallTarget.GetComponent<BallProjectile>().GetIsHeld());
+
+        if (_currentBallTarget.GetComponent<BallProjectile>().GetIsHeld() == false)
         {
-            _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(true);
             _isHoldingBall = true;
+            //_currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(true);
         }
     }
 
@@ -362,7 +392,16 @@ public class AIAgentController : MonoBehaviour {
     {
         if (_enemyTarget && _isHoldingBall)
         {
-            //_animator.SetTrigger("Throw");
+            if (Vector3.Distance(_holdPosition.position, _enemyTarget.transform.position) < Vector3.Distance(_secondaryThrowPosition.position, _enemyTarget.transform.position))
+            {
+                // hold ball in hold position
+                _currentBallTarget.transform.position = _holdPosition.position;
+            }
+            else
+            {
+                // hold ball in secondary position
+                _currentBallTarget.transform.position = _secondaryThrowPosition.position;
+            }
 
             // get referemce to ball script
             BallProjectile currentBall = _currentBallTarget.GetComponent<BallProjectile>();
@@ -374,7 +413,7 @@ public class AIAgentController : MonoBehaviour {
             currentBall._lastThrower = this;
             _isHoldingBall = false;
             _currentBallTarget = null;
-            ScanForObjects();
+            //ScanForObjects();
         }
     }
 
@@ -473,11 +512,13 @@ public class AIAgentController : MonoBehaviour {
         {
             // hold ball in hold position
             _currentBallTarget.transform.position = _holdPosition.position;
+            _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(true);
         }
         else
         {
             // hold ball in secondary position
             _currentBallTarget.transform.position = _secondaryThrowPosition.position;
+            _currentBallTarget.GetComponent<BallProjectile>().SetIsHeld(true);
         }
     }
 
@@ -532,7 +573,10 @@ public class AIAgentController : MonoBehaviour {
             {
                 _currentBallTarget = ball;
                 PickUpBall();
-                attacker.Eliminate(attacker);
+                if (!attacker)
+                {
+                    gameManager.PlayerEliminated();
+                }
             }
 
             // if not

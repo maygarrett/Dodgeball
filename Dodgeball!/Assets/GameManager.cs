@@ -215,6 +215,7 @@ public class GameManager : MonoBehaviour {
         _simulationCamera.SetActive(true);
         CheckPlayers(_playerAgentController);
         _playerElimText.SetActive(true);
+        Destroy(_player);
     }
 
     public void QuitGame()
